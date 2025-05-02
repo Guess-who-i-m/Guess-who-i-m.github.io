@@ -163,7 +163,7 @@ export default {
       try {
         const response = await axios.get(apiUrl, {
           headers: {
-            'Authorization': `${import.meta.env.GITHUB_TOKEN}`,
+            'Authorization': `token ${import.meta.env.VITE_GITHUB_TOKEN}`,
             'Accept': 'application/vnd.github.v3+json'
           }
         });
@@ -190,7 +190,7 @@ export default {
       try {
         const response = await axios.get(apiUrl, {
           headers: {
-            'Authorization': `${import.meta.env.GITHUB_TOKEN}`,
+            'Authorization': `token ${import.meta.env.VITE_GITHUB_TOKEN}`,
             'Accept': 'application/vnd.github.v3+json'
           }
         });
@@ -210,27 +210,33 @@ export default {
     
     async downloadFile(path, url) {
       this.addLog(`下载文件: ${path}`);
-      // console.log(url);
+      console.log(url);
       try {
         // const response = await axios.get(url);
         // 检测二进制文件
         const fileExt = path.split('.').pop().toLowerCase();
-        const binaryExts = ['ipynb', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'zip', 'docx'];
+        const binaryExts = ['ipynb', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'zip', 'docx', 'pptx'];
         const isBinary = binaryExts.includes(fileExt);
 
         // 转换 raw.githubusercontent.com 为 api.github.com
-        const apiUrl = url.replace(
-          'https://raw.githubusercontent.com/',
-          'https://api.github.com/repos/'
-        ).replace('/main/', '/contents/') + '?ref=main';  // 替换 /main/ 为 /contents/
+        // const apiUrl = url.replace(
+        //   'https://raw.githubusercontent.com/',
+        //   'https://api.github.com/repos/'
+        // ).replace('/main/', '/contents/') + '?ref=main';  // 替换 /main/ 为 /contents/
 
-        const response = await axios.get(apiUrl, {
-          responseType: isBinary ? 'arraybuffer' : 'text',
-          headers: {
-            'Authorization': `${import.meta.env.GITHUB_TOKEN}`,
-            'Accept': 'application/vnd.github.v3.raw'
-          }
+        // const response = await axios.get(apiUrl, {
+        //   responseType: isBinary ? 'arraybuffer' : 'text',
+        //   headers: {
+        //     'Authorization': `token ${import.meta.env.VITE_GITHUB_TOKEN}`,
+        //     'Accept': 'application/vnd.github.v3.raw'
+        //   }
+        // });
+
+        // 直接使用原始 URL（无需转换）
+        const response = await axios.get(url, {
+          responseType: isBinary ? 'arraybuffer' : 'text', // 二进制文件必须用 arraybuffer
         });
+
         this.zip.file(path, response.data);
         this.downloadedFiles++;
         this.downloadProgress = (this.downloadedFiles / this.totalFiles) * 100;
