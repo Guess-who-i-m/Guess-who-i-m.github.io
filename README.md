@@ -1,6 +1,8 @@
 # github-downloader
 
-This template should help get you started developing with Vue 3 in Vite.
+当前该目录下放置了一个专门用于在github上下载某一目录下文件的工具。docs下存放了git打包后得到的文件，其它内容是相应源码。
+
+该目录已部署托管到了gitHub.io上，可以访问链接 https://guess-who-i-m.github.io 进行访问。
 
 ## Recommended IDE Setup
 
